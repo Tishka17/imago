@@ -1,19 +1,3 @@
-# cdef extern from "molecule.h" namespace "imago":
-#     cdef cppclass Molecule:
-#         Molecule()
-#         void clear();
-#
-# cdef class PyMolecule:
-#     cdef Molecule *thisptr  # hold a C++ instance which we're wrapping
-#     def __cinit__(self):
-#         self.thisptr = new Molecule()
-#     def __dealloc__(self):
-#         del self.thisptr
-#
-#     def clear(self):
-#         return self.thisptr.clear()
-
-
 cdef extern from "imago_c.h":
     ctypedef unsigned long long qword
 
@@ -38,5 +22,4 @@ def set_session_id(session_id: int) -> None:
 
 def get_configs()-> str:
     res = imagoGetConfigsList()
-    print("111")
     return res.decode()
