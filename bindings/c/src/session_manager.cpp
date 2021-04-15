@@ -13,14 +13,14 @@
  ***************************************************************************/
 
 #include <iostream>
-#include <boost/thread.hpp>
+#include <mutex>
 
 #include "session_manager.h"
 
 using namespace imago;
 
-boost::mutex SessionManager::_mutex;
-boost::thread_specific_ptr<qword> SessionManager::_curSID;
+std::mutex SessionManager::_mutex;
+thread_local qword SessionManager::_curSID;
 SessionManager SessionManager::_instance;
 
 
@@ -31,7 +31,7 @@ SessionManager::SessionManager()
 
 qword SessionManager::getSID()
 {
-   qword *pid = _curSID.get();
+   qword pid = _curSID;
    qword id;
 
    if (pid == 0)
@@ -40,7 +40,9 @@ qword SessionManager::getSID()
       setSID(id);
    }
    else
-      id = *pid;
+   {
+      id = pid;
+   }
 
    return id;
 }
@@ -79,14 +81,16 @@ void SessionManager::setSID( qword id )
       _activeSessions.insert(id);
    }
 
-   qword *pId = _curSID.get();
+   qword pId = _curSID;
    if (pId == 0)
    {
-      _curSID.reset(new qword(id));
-      pId = _curSID.get();
+      _curSID = id;
+      pId = _curSID;
    }
    else
-      *pId = id;
+   {
+      pId = id;
+   }
 }
 
 void SessionManager::releaseSID( qword id )
@@ -113,6 +117,6 @@ SessionManager::~SessionManager()
 {
    _activeSessions.clear();
    _availableSIDs.clear();
-   _curSID.reset(0);
+   _curSID = 0;
 }
 

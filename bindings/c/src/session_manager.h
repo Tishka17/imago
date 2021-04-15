@@ -18,8 +18,8 @@
 
 #include <set>
 #include <deque>
-#include <boost/thread/mutex.hpp>
 #include <boost/thread/tss.hpp>
+#include <mutex>
 
 #include "comdef.h"
 
@@ -43,10 +43,10 @@ namespace imago
       typedef std::set<qword> IdSet;
       IdSet _activeSessions;
 
-      static boost::thread_specific_ptr<qword> _curSID;
+      static thread_local qword _curSID;
       static SessionManager _instance;
-      static boost::mutex _mutex;
-      typedef boost::lock_guard<boost::mutex> lock_guard;
+      static std::mutex _mutex;
+      typedef std::lock_guard<std::mutex> lock_guard;
 
       SessionManager();
       SessionManager( const SessionManager& );

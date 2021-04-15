@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.6)
 cmake_policy(VERSION 2.8.6)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 project(Imago)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/)
