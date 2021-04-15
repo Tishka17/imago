@@ -43,7 +43,7 @@ namespace imago
       typedef std::set<qword> IdSet;
       IdSet _activeSessions;
 
-      static thread_local qword _curSID;
+      static thread_local qword* _curSID;
       static SessionManager _instance;
       static std::mutex _mutex;
       typedef std::lock_guard<std::mutex> lock_guard;

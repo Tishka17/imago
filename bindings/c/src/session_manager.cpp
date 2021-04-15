@@ -20,7 +20,7 @@
 using namespace imago;
 
 std::mutex SessionManager::_mutex;
-thread_local qword SessionManager::_curSID;
+thread_local qword* SessionManager::_curSID;
 SessionManager SessionManager::_instance;
 
 
@@ -31,7 +31,7 @@ SessionManager::SessionManager()
 
 qword SessionManager::getSID()
 {
-   qword pid = _curSID;
+   qword* pid = _curSID;
    qword id;
 
    if (pid == 0)
@@ -41,7 +41,7 @@ qword SessionManager::getSID()
    }
    else
    {
-      id = pid;
+      id = *pid;
    }
 
    return id;
@@ -81,15 +81,15 @@ void SessionManager::setSID( qword id )
       _activeSessions.insert(id);
    }
 
-   qword pId = _curSID;
+   qword* pId = _curSID;
    if (pId == 0)
    {
-      _curSID = id;
+      _curSID = new qword(id);
       pId = _curSID;
    }
    else
    {
-      pId = id;
+      *pId = id;
    }
 }
 
